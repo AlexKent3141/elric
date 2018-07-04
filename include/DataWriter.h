@@ -1,6 +1,8 @@
 #ifndef __DATA_WRITER_H__
 #define __DATA_WRITER_H__
 
+#include <string>
+
 // This is the base class for objects which can serialise data.
 // The data format could be JSON, a markup language like XML or some other language.
 class DataWriter
