@@ -1,18 +1,14 @@
 #ifndef __TEST_SCHEMA_H__
 #define __TEST_SCHEMA_H__
 
-#include "../headers/DataReader.h"
-#include "../headers/DataWriter.h"
-#include <iostream>
+#include "../../include/DataReader.h"
+#include "../../include/DataWriter.h"
 #include <sstream>
 
+// This is an example data formatting schema which is used in the unit tests.
 class TestSchema : public DataReader, public DataWriter
 {
 public:
-    ~TestSchema()
-    {
-    }
-
     // Deserialise an object that is expressed using the test schema.
     void Parse(const std::string& data)
     {
@@ -22,7 +18,7 @@ public:
         {
             if (line != Start && line != End)
             {
-                int spaceLoc = line.find(" ");
+                size_t spaceLoc = line.find(" ");
                 if (spaceLoc != std::string::npos)
                 {
                     name = line.substr(0, spaceLoc);
