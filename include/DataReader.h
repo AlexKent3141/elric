@@ -1,6 +1,8 @@
 #ifndef __DATA_READER_H__
 #define __DATA_READER_H__
 
+#include "Error.h"
+#include "Utilities.h"
 #include <map>
 
 // This is the base class for objects which can read data.
@@ -18,31 +20,12 @@ public:
     T GetData(const std::string& name) const
     {
         auto it = _pairs.find(name);
-        if (it == _pairs.end()) throw;
+        if (it == _pairs.end()) throw ElricException(ErrorCode::KeyDoesNotExist);
         return Convert<T>(it->second);
     }
 
 protected:
     std::map<std::string, std::string> _pairs;
-
-private:
-    template<typename T>
-    T Convert(const std::string& data) const
-    {
-        throw;
-    }
 };
-
-template<>
-std::string DataReader::Convert(const std::string& data) const
-{
-    return data;
-}
-
-template<>
-int DataReader::Convert(const std::string& data) const
-{
-    return stoi(data);
-}
 
 #endif // __DATA_READER_H__

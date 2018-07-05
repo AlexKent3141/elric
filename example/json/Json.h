@@ -7,7 +7,7 @@
 
 using namespace rapidjson;
 
-// This class is a thin wrapper around tencent's rapidjson library which implements the DataWriter
+// This class is a thin wrapper around Tencent's rapidjson library which implements the DataWriter
 // interface.
 class Json : public DataWriter
 {
@@ -26,7 +26,7 @@ public:
         }
     }
 
-    void BeginObject()
+    void StartObject()
     {
         _writer->StartObject();
     }

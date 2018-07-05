@@ -29,7 +29,7 @@ public:
         }
     }
 
-    void BeginObject()
+    void StartObject()
     {
         _data += Start;
     }
@@ -50,6 +50,26 @@ public:
     }
 
     void AddInt(const char* name, const int& value)
+    {
+        _data += "\n" + std::string(name) + " " + std::to_string(value);
+    }
+
+    void AddUInt(const char* name, const unsigned int& value)
+    {
+        _data += "\n" + std::string(name) + " " + std::to_string(value);
+    }
+
+    void AddInt64(const char* name, const int64_t& value)
+    {
+        _data += "\n" + std::string(name) + " " + std::to_string(value);
+    }
+
+    void AddUInt64(const char* name, const uint64_t& value)
+    {
+        _data += "\n" + std::string(name) + " " + std::to_string(value);
+    }
+
+    void AddDouble(const char* name, const double& value)
     {
         _data += "\n" + std::string(name) + " " + std::to_string(value);
     }

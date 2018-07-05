@@ -1,4 +1,4 @@
-APP=test
+APP=test.out
 CXXFLAGS=-Wall -std=c++14
 
 src=$(shell find ./ -type f -name '*.cpp')

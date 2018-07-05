@@ -17,15 +17,48 @@ TEST_CASE("Serialise and deserialise a string", "[Reading and writing tests]")
     REQUIRE(post.content == TestString);
 }
 
-TEST_CASE("Serialise and deserialise a int", "[Reading and writing tests]")
+TEST_CASE("Serialise and deserialise a signed int", "[Reading and writing tests]")
 {
-    const int TestInt = 3141;
+    const int TestInt = -3141;
     Object<int> pre = { TestInt };
 
     std::string serialised = Serialise::To<TestSchema>(pre);
     Object<int> post = Serialise::From<TestSchema, Object<int>>(serialised);
 
     REQUIRE(post.content == TestInt);
+}
+
+TEST_CASE("Serialise and deserialise a unsigned int", "[Reading and writing tests]")
+{
+    const unsigned int TestUInt = 3141;
+    Object<unsigned int> pre = { TestUInt };
+
+    std::string serialised = Serialise::To<TestSchema>(pre);
+    Object<unsigned int> post = Serialise::From<TestSchema, Object<unsigned int>>(serialised);
+
+    REQUIRE(post.content == TestUInt);
+}
+
+TEST_CASE("Serialise and deserialise a signed 64 bit integer", "[Reading and writing tests]")
+{
+    const int64_t TestInt64 = -31415926535;
+    Object<int64_t> pre = { TestInt64 };
+
+    std::string serialised = Serialise::To<TestSchema>(pre);
+    Object<int64_t> post = Serialise::From<TestSchema, Object<int64_t>>(serialised);
+
+    REQUIRE(post.content == TestInt64);
+}
+
+TEST_CASE("Serialise and deserialise an unsigned 64 bit integer", "[Reading and writing tests]")
+{
+    const uint64_t TestUInt64 = 31415926535;
+    Object<uint64_t> pre = { TestUInt64 };
+
+    std::string serialised = Serialise::To<TestSchema>(pre);
+    Object<uint64_t> post = Serialise::From<TestSchema, Object<uint64_t>>(serialised);
+
+    REQUIRE(post.content == TestUInt64);
 }
 
 TEST_CASE("Serialise and deserialise a double", "[Reading and writing tests]")

@@ -1,12 +1,49 @@
 #ifndef __UTILITIES_H__
 #define __UTILITIES_H__
 
-// This method iterates over a tuple and applies "f" to each element.
-template <typename T, T... S, typename F>
-constexpr void ForEachInSequence(std::integer_sequence<T, S...>, F&& f)
+#include "Error.h"
+#include <string>
+
+template<typename T>
+T Convert(const std::string& data)
 {
-    using unpack_t = int[];
-    (void)unpack_t{(static_cast<void>(f(std::integral_constant<T, S>{})), 0)..., 0};
+    throw ElricException(ErrorCode::TypeNotSupported);
+}
+
+template<>
+std::string Convert(const std::string& data)
+{
+    return data;
+}
+
+template<>
+int Convert(const std::string& data)
+{
+    return stoi(data);
+}
+
+template<>
+unsigned int Convert(const std::string& data)
+{
+    return stoul(data);
+}
+
+template<>
+int64_t Convert(const std::string& data)
+{
+    return stoll(data);
+}
+
+template<>
+uint64_t Convert(const std::string& data)
+{
+    return stoull(data);
+}
+
+template<>
+double Convert(const std::string& data)
+{
+    return stod(data);
 }
 
 #endif // __UTILITIES_H__

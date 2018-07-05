@@ -15,7 +15,7 @@ public:
     {
         static_assert(std::is_base_of<DataWriter, Writer>::value, "Writer is not a DataWriter");
         Writer writer;
-        writer.BeginObject();
+        writer.StartObject();
 
         // Iterate over the meta-properties in the tuple and add each to the writer.
         constexpr auto numProperties = std::tuple_size<decltype(C::metaProperties)>::value;
@@ -50,6 +50,15 @@ public:
         });
 
         return object;
+    }
+
+private:
+    // This method iterates over a tuple and applies "f" to each element.
+    template <typename T, T... S, typename F>
+    static constexpr void ForEachInSequence(std::integer_sequence<T, S...>, F&& f)
+    {
+        using unpack_t = int[];
+        (void)unpack_t{(static_cast<void>(f(std::integral_constant<T, S>{})), 0)..., 0};
     }
 };
 
