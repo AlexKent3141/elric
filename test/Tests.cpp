@@ -1,10 +1,8 @@
-#ifndef __TEST_READING_AND_WRITING_TYPES_H__
-#define __TEST_READING_AND_WRITING_TYPES_H__
-
 #include "catch2/catch.hpp"
 #include "helper/Object.h"
 #include "helper/TestSchema.h"
 #include "../include/Serialise.h"
+#include <vector>
 
 TEST_CASE("Serialise and deserialise a string", "[Reading and writing tests]")
 {
@@ -83,4 +81,36 @@ TEST_CASE("Serialise and deserialise a double", "[Reading and writing tests]")
     REQUIRE(post.content == TestDouble);
 }
 
-#endif // __TEST_READING_AND_WRITING_TYPES_H__
+TEST_CASE("Attempt to serialise unsupported type", "[Error scenarios]")
+{
+    bool thrown = false;
+    try
+    {
+        Object<std::vector<int>> pre = { std::vector<int>() };
+        Serialise::To<TestSchema, Object<std::vector<int>>>(pre);
+    }
+    catch (const ElricException& e)
+    {
+        REQUIRE(e.GetError() == ErrorCode::TypeNotSupported);
+        thrown = true;
+    }
+
+    REQUIRE(thrown);
+}
+
+TEST_CASE("Attempt to deserialise a string which is missing content", "[Error scenarios]")
+{
+    bool thrown = false;
+    try
+    {
+        std::string pre = ""; // String which is missing the "content" field.
+        Serialise::From<TestSchema, Object<int>>(pre);
+    }
+    catch (const ElricException& e)
+    {
+        REQUIRE(e.GetError() == ErrorCode::KeyDoesNotExist);
+        thrown = true;
+    }
+
+    REQUIRE(thrown);
+}
