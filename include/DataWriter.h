@@ -19,6 +19,7 @@ public:
 
     // Override these methods to serialise different types.
     virtual void AddString(const char* name, const std::string& value) {}
+    virtual void AddBool(const char* name, const bool& value) {}
     virtual void AddInt(const char* name, const int& value) {}
     virtual void AddUInt(const char* name, const unsigned int& value) {}
     virtual void AddInt64(const char* name, const int64_t& value) {}
@@ -39,6 +40,12 @@ template<>
 void DataWriter::AddData<std::string>(const char* name, const std::string& value)
 {
     AddString(name, value);
+}
+
+template<>
+void DataWriter::AddData<bool>(const char* name, const bool& value)
+{
+    AddBool(name, value);
 }
 
 template<>

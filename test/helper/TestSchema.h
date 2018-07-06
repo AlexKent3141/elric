@@ -49,6 +49,11 @@ public:
         _data += "\n" + std::string(name) + " " + value;
     }
 
+    void AddBool(const char* name, const bool& value)
+    {
+        _data += "\n" + std::string(name) + " " + std::to_string(value);
+    }
+
     void AddInt(const char* name, const int& value)
     {
         _data += "\n" + std::string(name) + " " + std::to_string(value);

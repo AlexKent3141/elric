@@ -5,7 +5,7 @@
 
 int main()
 {
-    Pokemon pikachu = { "pikachu", 25 };
+    Pokemon pikachu = { "pikachu", 25, true };
     std::cout << Serialise::To<Json>(pikachu) << std::endl;
 
     // Expected output:

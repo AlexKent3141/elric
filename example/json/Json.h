@@ -47,6 +47,12 @@ public:
         _writer->String(value.c_str());
     }
 
+    void AddBool(const char* name, const bool& value)
+    {
+        _writer->Key(name);
+        _writer->Bool(value);
+    }
+
     void AddInt(const char* name, const int& value)
     {
         _writer->Key(name);

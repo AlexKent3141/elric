@@ -17,6 +17,17 @@ TEST_CASE("Serialise and deserialise a string", "[Reading and writing tests]")
     REQUIRE(post.content == TestString);
 }
 
+TEST_CASE("Serialise and deserialise a bool", "[Reading and writing tests]")
+{
+    const bool TestBool = true;
+    Object<bool> pre = { TestBool };
+
+    std::string serialised = Serialise::To<TestSchema>(pre);
+    Object<bool> post = Serialise::From<TestSchema, Object<bool>>(serialised);
+
+    REQUIRE(post.content == TestBool);
+}
+
 TEST_CASE("Serialise and deserialise a signed int", "[Reading and writing tests]")
 {
     const int TestInt = -3141;
