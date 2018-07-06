@@ -1,5 +1,5 @@
-#ifndef __JSON_H__
-#define __JSON_H__
+#ifndef __JSON_WRITER_H__
+#define __JSON_WRITER_H__
 
 #include "../../include/DataWriter.h"
 #include "rapidjson/writer.h"
@@ -9,15 +9,15 @@ using namespace rapidjson;
 
 // This class is a thin wrapper around Tencent's rapidjson library which implements the DataWriter
 // interface.
-class Json : public DataWriter
+class JsonWriter : public DataWriter
 {
 public:
-    Json()
+    JsonWriter()
     {
         _writer = new Writer<StringBuffer>(_s);
     }
 
-    ~Json()
+    ~JsonWriter()
     {
         if (_writer != nullptr)
         {
