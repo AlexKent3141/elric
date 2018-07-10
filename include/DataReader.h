@@ -1,51 +1,63 @@
 #ifndef __DATA_READER_H__
 #define __DATA_READER_H__
 
+#include "DataValue.h"
 #include "Error.h"
-#include "Utilities.h"
 #include <map>
+#include <vector>
 
 // This is the base class for objects which can read data.
 // The data format could be JSON, a markup language like XML or some other language.
 class DataReader
 {
 public:
-    virtual ~DataReader() {}
+    virtual ~DataReader()
+    {
+        auto it = _pairs.begin();
+        while (it != _pairs.end()) delete it++->second;
+    }
 
     // Parse the formatted data into key-value pairs.
     virtual void Parse(const std::string&) = 0;
 
-    // Allow clients to implement their own boolean parser as there are a few natural ways for these
-    // to be stored e.g. 1/0 or "true"/"false".
-    // By default we assume an integral representation.
-    virtual bool BoolFromString(const std::string& value) const
+    // Helper method to be called when parsing which adds key/value pairs.
+    template<typename T>
+    void AddData(const std::string& name, const T& value)
     {
-        return Convert<int>(value);
+        _pairs[name] = new DataValue<T>(value);
     }
 
     // Get the field with the specified name.
     template<typename T>
-    T GetData(const std::string& name) const
+    void GetData(const std::string& name, T& value) const
     {
         auto it = _pairs.find(name);
         if (it == _pairs.end()) throw ElricException(ErrorCode::KeyDoesNotExist);
-        return ConvertFromString<T>(it->second);
+
+        auto data = static_cast<DataValue<T>*>(it->second);
+        value = data->value;
     }
 
-    template<typename T>
-    T ConvertFromString(const std::string& value) const
+    // Get an array field by name.
+    // Internally the array was stored as a vector type.
+    template<typename T, size_t N>
+    void GetData(const std::string& name, T(&value)[N]) const
     {
-        return Convert<T>(value);
+        auto it = _pairs.find(name);
+        if (it == _pairs.end()) throw ElricException(ErrorCode::KeyDoesNotExist);
+
+        auto data = static_cast<DataValue<std::vector<T>>*>(it->second);
+        const auto& val = data->value;
+
+        // Copy the contents of the vector into the array.
+        for (size_t i = 0; i < N; i++)
+        {
+            value[i] = val[i];
+        }
     }
 
 protected:
-    std::map<std::string, std::string> _pairs;
+    std::map<std::string, Value*> _pairs;
 };
-
-template<>
-bool DataReader::ConvertFromString<bool>(const std::string& value) const
-{
-    return BoolFromString(value);
-}
 
 #endif // __DATA_READER_H__

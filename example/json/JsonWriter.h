@@ -36,26 +36,38 @@ public:
         _writer->EndObject();
     }
 
+    void StartArray()
+    {
+        _writer->StartArray();
+    }
+
+    void EndArray()
+    {
+        _writer->EndArray();
+    }
+
+    void AddKey(const char* name)
+    {
+        _writer->Key(name);
+    }
+
     std::string Get() const
     {
         return _s.GetString();
     }
 
-    void AddString(const char* name, const std::string& value)
+    void AddString(const std::string& value)
     {
-        _writer->Key(name);
         _writer->String(value.c_str());
     }
 
-    void AddBool(const char* name, const bool& value)
+    void AddBool(const bool& value)
     {
-        _writer->Key(name);
         _writer->Bool(value);
     }
 
-    void AddInt(const char* name, const int& value)
+    void AddInt(const int& value)
     {
-        _writer->Key(name);
         _writer->Int(value);
     }
 

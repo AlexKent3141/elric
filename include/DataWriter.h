@@ -4,7 +4,7 @@
 #include "Error.h"
 #include <string>
 
-// This is the base class for objects which can serialise data.
+// This is the base class for objects which can serialise key-value pairs.
 // The data format could be JSON, a markup language like XML or some other language.
 class DataWriter
 {
@@ -14,68 +14,86 @@ public:
     virtual void StartObject() = 0;
     virtual void EndObject() = 0;
 
-    // Get the formatted object string.
-    virtual std::string Get() const = 0;
+    virtual void StartArray() {}
+    virtual void EndArray() {}
+
+    virtual void AddKey(const char* name) = 0;
 
     // Override these methods to serialise different types.
-    virtual void AddString(const char* name, const std::string& value) {}
-    virtual void AddBool(const char* name, const bool& value) {}
-    virtual void AddInt(const char* name, const int& value) {}
-    virtual void AddUInt(const char* name, const unsigned int& value) {}
-    virtual void AddInt64(const char* name, const int64_t& value) {}
-    virtual void AddUInt64(const char* name, const uint64_t& value) {}
-    virtual void AddDouble(const char* name, const double& value) {}
+    virtual void AddString(const std::string& value) {}
+    virtual void AddBool(const bool& value) {}
+    virtual void AddInt(const int& value) {}
+    virtual void AddUInt(const unsigned int& value) {}
+    virtual void AddInt64(const int64_t& value) {}
+    virtual void AddUInt64(const uint64_t& value) {}
+    virtual void AddDouble(const double& value) {}
+
+    // Get the formatted object string.
+    virtual std::string Get() const = 0;
 
     // Add new data to be formatted.
     // Each data type that can be serialised has a specialisation of this method and
     // corresponding virtual adding method.
     template<typename T>
-    void AddData(const char* name, const T& value)
+    void AddValue(const T& value)
     {
         throw ElricException(ErrorCode::TypeNotSupported);
+    }
+
+    template<typename T, size_t N>
+    void AddValue(const T(&array)[N])
+    {
+        StartArray();
+
+        for (const T& value : array)
+        {
+            AddValue(value);
+        }
+
+        EndArray();
     }
 };
 
 template<>
-void DataWriter::AddData<std::string>(const char* name, const std::string& value)
+void DataWriter::AddValue<std::string>(const std::string& value)
 {
-    AddString(name, value);
+    AddString(value);
 }
 
 template<>
-void DataWriter::AddData<bool>(const char* name, const bool& value)
+void DataWriter::AddValue<bool>(const bool& value)
 {
-    AddBool(name, value);
+    AddBool(value);
 }
 
 template<>
-void DataWriter::AddData<int>(const char* name, const int& value)
+void DataWriter::AddValue<int>(const int& value)
 {
-    AddInt(name, value);
+    AddInt(value);
 }
 
 template<>
-void DataWriter::AddData<unsigned int>(const char* name, const unsigned int& value)
+void DataWriter::AddValue<unsigned int>(const unsigned int& value)
 {
-    AddUInt(name, value);
+    AddUInt(value);
 }
 
 template<>
-void DataWriter::AddData<int64_t>(const char* name, const int64_t& value)
+void DataWriter::AddValue<int64_t>(const int64_t& value)
 {
-    AddInt64(name, value);
+    AddInt64(value);
 }
 
 template<>
-void DataWriter::AddData<uint64_t>(const char* name, const uint64_t& value)
+void DataWriter::AddValue<uint64_t>(const uint64_t& value)
 {
-    AddUInt64(name, value);
+    AddUInt64(value);
 }
 
 template<>
-void DataWriter::AddData<double>(const char* name, const double& value)
+void DataWriter::AddValue<double>(const double& value)
 {
-    AddDouble(name, value);
+    AddDouble(value);
 }
 
 #endif // __DATA_WRITER_H__

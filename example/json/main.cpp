@@ -6,7 +6,7 @@
 
 int main()
 {
-    Pokemon pikachu = { "pikachu", 25, true };
+    Pokemon pikachu = { "pikachu", 25, true, { 2, 4, 1, 4, 2, 0, 0 } };
 
     // Serialise pikachu.
     std::string ser = Serialise::To<JsonWriter>(pikachu);
